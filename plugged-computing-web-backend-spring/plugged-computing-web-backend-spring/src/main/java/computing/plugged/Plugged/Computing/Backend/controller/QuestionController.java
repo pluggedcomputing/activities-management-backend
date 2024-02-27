@@ -23,6 +23,7 @@ public class QuestionController {
 
     @PostMapping
     public void createResponseQuestion(@RequestBody Question question) {
+        questionRepository.save(question);
         System.out.println("Response question created: " + question);
 
     }

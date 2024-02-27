@@ -27,6 +27,7 @@ public class UserController {
     @PostMapping
     public void createUser(@RequestBody User user) {
 
+        userRepository.save(user);
         String email = user.getEmail();
         System.out.println("User created: " + email);
 
