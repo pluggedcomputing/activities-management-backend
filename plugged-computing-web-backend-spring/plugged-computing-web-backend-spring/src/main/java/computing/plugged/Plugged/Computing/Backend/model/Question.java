@@ -22,7 +22,7 @@ public class Question {
     private String numberActivity;
     private String userResponse;
     private String expectedResponse;
-    private boolean isCorrects;
+    private Boolean isCorrect;
     private String dateResponse;
     private String typeOfQuestion;
 
