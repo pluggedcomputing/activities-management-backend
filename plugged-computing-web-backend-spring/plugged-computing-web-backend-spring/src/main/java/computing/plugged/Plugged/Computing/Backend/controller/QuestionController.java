@@ -5,10 +5,9 @@ import computing.plugged.Plugged.Computing.Backend.model.User;
 import computing.plugged.Plugged.Computing.Backend.repository.QuestionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/question")
@@ -26,6 +25,11 @@ public class QuestionController {
         questionRepository.save(question);
         System.out.println("Response question created: " + question);
 
+    }
+
+    @GetMapping
+    public List<Question> getAllQuestion(){
+        return questionRepository.findAll();
     }
 
 
