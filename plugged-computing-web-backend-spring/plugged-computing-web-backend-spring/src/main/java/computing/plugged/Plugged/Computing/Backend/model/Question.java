@@ -6,6 +6,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -23,7 +27,7 @@ public class Question {
     private String userResponse;
     private String expectedResponse;
     private Boolean isCorrect;
-    private String dateResponse;
+    private Date dateResponse;
     private String typeOfQuestion;
 
 

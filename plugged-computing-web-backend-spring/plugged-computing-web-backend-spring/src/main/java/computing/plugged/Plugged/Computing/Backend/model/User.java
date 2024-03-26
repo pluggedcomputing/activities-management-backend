@@ -2,6 +2,8 @@ package computing.plugged.Plugged.Computing.Backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "\"user\"")
@@ -13,6 +15,8 @@ public class User {
 
     @Column(nullable = false)
     private String email;
+
+
 
 
 

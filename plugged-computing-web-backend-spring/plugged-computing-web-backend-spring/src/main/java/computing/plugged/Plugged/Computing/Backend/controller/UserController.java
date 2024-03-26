@@ -6,6 +6,8 @@ import computing.plugged.Plugged.Computing.Backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,10 +28,10 @@ public class UserController {
 
     @PostMapping
     public void createUser(@RequestBody User user) {
-
         userRepository.save(user);
         String email = user.getEmail();
         System.out.println("User created: " + email);
 
     }
+
 }
