@@ -1,6 +1,9 @@
-FROM openjdk:17-jdk as builder
-RUN mkdir /app
+FROM maven:3.9.6-amazoncorretto-21-al2023 AS build
+COPY . .
+RUN mvn package -DskipTests
+
+FROM amazoncorretto:21.0.2-alpine3.19
 WORKDIR /app
-COPY target/*.jar  /app/app.jar
+COPY --from=build target/activities-management-backend-0.1.0.jar app.jar
 EXPOSE 8080
-CMD ["java","-jar","/app/app.jar"]
+CMD ["java", "-jar", "app.jar"]

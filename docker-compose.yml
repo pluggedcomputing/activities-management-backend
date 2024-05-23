@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+  app:
+    container_name: container-backend
+    image: a4sufpb/activities-backend:latest
+    ports:
+      - "8383:8080"
+    depends_on:
+      - postgres
+    networks:
+      - spring-boot-network
+    restart: always
+    env_file:
+      - prod.env
+
+  postgres:
+    container_name: container-database
+    image: postgres:16-alpine
+    ports:
+      - "5454:5432"
+    networks:
+      - spring-boot-network
+    restart: always
+    env_file:
+      - prod.env
+    volumes:
+      - db_data:/var/lib/postgresql/db
+
+
+networks:
+  spring-boot-network:
+
+volumes:
+ db_data:

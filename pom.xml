@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>cesar.nataniel</groupId>
 	<artifactId>activities-management-backend</artifactId>
-	<version>0.1</version>
+	<version>0.1.0</version>
 	<name>activities-management-backend</name>
 	<description>Repositório Backend para Gestão de Perguntas e Respostas de Atividades do Computação Plugada</description>
 	<properties>
