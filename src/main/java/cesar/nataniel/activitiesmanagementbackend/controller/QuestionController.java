@@ -55,7 +55,7 @@ public class QuestionController {
         // Verificar se as datas de início e término foram fornecidas
         if (startDate != null && endDate != null) {
             questions = questions.stream()
-                    .filter(q -> q.getDateResponse().after(startDate) && q.getDateResponse().before(endDate))
+                    .filter(q -> q.getDateResponse().before(startDate) && q.getDateResponse().after(endDate))
                     .collect(Collectors.toList());
         }
 
