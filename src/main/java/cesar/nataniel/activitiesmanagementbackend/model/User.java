@@ -2,8 +2,6 @@ package cesar.nataniel.activitiesmanagementbackend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Entity
 @Table(name = "\"user\"")
@@ -14,6 +12,6 @@ public class User {
     private long id;
 
     @Column(nullable = false)
-    private String email;
+    private String userName;
 
 }

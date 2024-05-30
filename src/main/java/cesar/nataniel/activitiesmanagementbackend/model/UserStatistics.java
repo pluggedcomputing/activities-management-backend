@@ -15,8 +15,7 @@ public class UserStatistics {
 
     private double calculatePercentage(int quantityAnswers, int quantityAllAnswers) {
         if (quantityAllAnswers != 0) {
-            double percentage = ((double) quantityAnswers / quantityAllAnswers) * 100;
-            return percentage;
+            return ((double) quantityAnswers / quantityAllAnswers) * 100;
         } else {
             return 0.0;
         }
