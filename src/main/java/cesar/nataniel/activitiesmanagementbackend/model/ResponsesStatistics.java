@@ -3,17 +3,15 @@ package cesar.nataniel.activitiesmanagementbackend.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class ResponsesStatistics {
 
     private int quantityAllAnswers;
-
     private int quantityCorrectsAnswers;
-
     private int quantityWrongsAnswers;
-
     private double percentageCorrectsAnswers;
-
     private double percentageWrongsAnswers;
 
 
@@ -25,25 +23,22 @@ public class ResponsesStatistics {
         }
     }
 
-    public void calculatePercentageCorrectsAnswers() {
-        this.percentageCorrectsAnswers = calculatePercentage(this.quantityCorrectsAnswers, this.quantityAllAnswers);
+    public ResponsesStatistics calculateStatistics(List<Response> responses){
+        ResponsesStatistics responsesStatistics = new ResponsesStatistics();
 
+        for (Response r: responses){
+            responsesStatistics.quantityAllAnswers++;
+            if (r.getIsCorrect()){
+                responsesStatistics.quantityCorrectsAnswers++;
+            } else{
+                responsesStatistics.quantityWrongsAnswers++;
+            }
+        }
+
+        responsesStatistics.percentageCorrectsAnswers = calculatePercentage(responsesStatistics.getQuantityCorrectsAnswers(), responsesStatistics.getQuantityAllAnswers());
+        responsesStatistics.percentageWrongsAnswers = calculatePercentage(responsesStatistics.getQuantityWrongsAnswers(), responsesStatistics.getQuantityAllAnswers());
+
+        return responsesStatistics;
     }
 
-    public void calculatePercentageWrongsAnswers() {
-        this.percentageWrongsAnswers = calculatePercentage(this.quantityWrongsAnswers, this.quantityAllAnswers);
-    }
-
-
-    public void addCorrectAnswers() {
-        this.quantityCorrectsAnswers++;
-    }
-
-    public void addWrongAnswers() {
-        this.quantityWrongsAnswers++;
-    }
-
-    public void addAnswer() {
-        this.quantityAllAnswers++;
-    }
 }

@@ -1,6 +1,5 @@
 package cesar.nataniel.activitiesmanagementbackend.controller;
 
-
 import cesar.nataniel.activitiesmanagementbackend.model.Response;
 import cesar.nataniel.activitiesmanagementbackend.model.User;
 import cesar.nataniel.activitiesmanagementbackend.model.UserStatistics;
@@ -21,13 +20,11 @@ public class UserController {
     private final UserRepository userRepository;
     private final ResponseRepository responseRepository;
 
-
     @Autowired
     public UserController(UserRepository userRepository, ResponseRepository responseRepository) {
         this.userRepository = userRepository;
         this.responseRepository = responseRepository;
     }
-
 
 
 
@@ -76,21 +73,16 @@ public class UserController {
     // Endpoint to get statistics of a unique user
     @GetMapping("/getStatisticsUser")
     public UserStatistics getStatisticsUser(
-            @RequestParam String userName, @RequestParam String idApp,
+            @RequestParam String userName,
+            @RequestParam String idApp,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 
+
         UserStatistics userStatistics = new UserStatistics();
-        for (Response q: getResponsesOfUser(userName, idApp, startDate, endDate)) {
-            userStatistics.addAnswer();
-            if (q.getIsCorrect()) {
-                userStatistics.addCorrectAnswers();
-            } else {
-                userStatistics.addWrongAnswers();
-            }
-        }
-        userStatistics.calculatePercentageCorrectsAnswers();
-        userStatistics.calculatePercentageWrongsAnswers();
+        List<Response> allResponses = getResponsesOfUser(userName, idApp, startDate, endDate);
+        userStatistics = userStatistics.calculateStatistics(allResponses);
+
 
         System.out.println(userStatistics);
         return userStatistics;

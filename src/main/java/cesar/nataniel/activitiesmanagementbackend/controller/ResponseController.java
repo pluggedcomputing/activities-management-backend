@@ -36,7 +36,7 @@ public class ResponseController {
     }
 
 
-    // Endpoint to get all responses
+    // Endpoint get all responses
     @GetMapping
     public List<Response> getAllResponse() {
         return responseRepository.findAll();
@@ -52,12 +52,15 @@ public class ResponseController {
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 
 
+        // Filter responses by userName and idApp
         List<Response> searchResponse = new ArrayList<>();
         for (Response q: getAllResponse()){
             if (q.getPhase().equalsIgnoreCase(phase) && q.getActivity().equalsIgnoreCase(activity)){
                 searchResponse.add(q);
             }
         }
+
+        // Checks if startDate and endDate have been provided
         if (startDate != null && endDate != null) {
             searchResponse = searchResponse.stream()
                     .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().after(startDate)) &&
@@ -69,7 +72,7 @@ public class ResponseController {
     }
 
 
-    // Endpoint to get statistics for a unique response
+    // Endpoint get statistics for a unique question
     @GetMapping("/getStatisticsResponse")
     public ResponsesStatistics getStatisticsResponse(
             @RequestParam String phase, @RequestParam String activity,
@@ -77,19 +80,40 @@ public class ResponseController {
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 
         ResponsesStatistics responsesStatistics = new ResponsesStatistics();
-        for (Response q: getSearchResponse(phase,activity,startDate,endDate)) {
-            responsesStatistics.addAnswer();
-            if (q.getIsCorrect()) {
-                responsesStatistics.addCorrectAnswers();
-            } else {
-                responsesStatistics.addWrongAnswers();
-            }
-        }
-        responsesStatistics.calculatePercentageCorrectsAnswers();
-        responsesStatistics.calculatePercentageWrongsAnswers();
+        List<Response> responses = getSearchResponse(phase,activity,startDate,endDate);
+
+        responsesStatistics.calculateStatistics(responses);
 
         System.out.println(responsesStatistics);
         return responsesStatistics;
     }
+
+
+    // Endpoint get statistics for all response
+    @GetMapping("/getStatisticsAllResponse")
+    public ResponsesStatistics getStatisticsAllResponse(
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+
+        // Get all responses
+        List<Response> responses = responseRepository.findAll();
+
+
+        // Checks if startDate and endDate have been provided
+        if (startDate != null && endDate != null) {
+            responses = responses.stream()
+                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().after(startDate)) &&
+                            (q.getDateResponse().equals(endDate) || q.getDateResponse().before(endDate)))
+                    .collect(Collectors.toList());
+        }
+
+        // Generate statistics of responses
+        ResponsesStatistics responsesStatistics = new ResponsesStatistics();
+        responsesStatistics.calculateStatistics(responses);
+
+
+        return responsesStatistics;
+    }
+
 
 }

@@ -3,6 +3,7 @@ package cesar.nataniel.activitiesmanagementbackend.model;
 import lombok.Data;
 
 import java.text.DecimalFormat;
+import java.util.List;
 
 @Data
 public class UserStatistics {
@@ -21,25 +22,21 @@ public class UserStatistics {
         }
     }
 
-    public void calculatePercentageCorrectsAnswers() {
-        this.percentageCorrectsAnswers = calculatePercentage(this.quantityCorrectsAnswers, this.quantityAllAnswers);
+    public UserStatistics calculateStatistics (List<Response> responses){
+        UserStatistics userStatistics = new UserStatistics();
 
-    }
+        for (Response r: responses){
+            userStatistics.quantityAllAnswers++;
+            if (r.getIsCorrect()){
+                userStatistics.quantityCorrectsAnswers++;
+            } else{
+                userStatistics.quantityWrongsAnswers++;
+            }
+        }
 
-    public void calculatePercentageWrongsAnswers() {
-        this.percentageWrongsAnswers = calculatePercentage(this.quantityWrongsAnswers, this.quantityAllAnswers);
-    }
+        userStatistics.percentageCorrectsAnswers = calculatePercentage(userStatistics.getQuantityCorrectsAnswers(), userStatistics.getQuantityAllAnswers());
+        userStatistics.percentageWrongsAnswers = calculatePercentage(userStatistics.getQuantityWrongsAnswers(), userStatistics.getQuantityAllAnswers());
 
-
-    public void addCorrectAnswers() {
-        this.quantityCorrectsAnswers++;
-    }
-
-    public void addWrongAnswers() {
-        this.quantityWrongsAnswers++;
-    }
-
-    public void addAnswer() {
-        this.quantityAllAnswers++;
+        return userStatistics;
     }
 }
