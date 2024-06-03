@@ -53,7 +53,7 @@ public class ResponseController {
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 
 
-        // Filter responses by userName and idApp
+        // Filter responses by userID and idApp
         List<Response> searchResponse = new ArrayList<>();
         for (Response q: getAllResponse()){
             if (q.getPhase().equalsIgnoreCase(phase) && q.getActivity().equalsIgnoreCase(activity)){
@@ -120,14 +120,14 @@ public class ResponseController {
     // Endpoint to get responses of a unique user
     @GetMapping("/getUniqueUser")
     public List<Response> getResponsesOfUser(
-            @RequestParam String userName,
+            @RequestParam String userID,
             @RequestParam String idApp,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 
-        // Filter questions by userName and idApp
+        // Filter questions by userID and idApp
         List<Response> responses = responseRepository.findAll().stream()
-                .filter(q -> q.getUserName().equals(userName) && q.getIdApp().equals(idApp))
+                .filter(q -> q.getUserID().equals(userID) && q.getIdApp().equals(idApp))
                 .collect(Collectors.toList());
 
         // Checks if startDate and endDate have been provided
@@ -145,14 +145,14 @@ public class ResponseController {
     // Endpoint to get statistics of a unique user
     @GetMapping("/getStatisticsUser")
     public UserStatistics getStatisticsUser(
-            @RequestParam String userName,
+            @RequestParam String userID,
             @RequestParam String idApp,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
 
 
         UserStatistics userStatistics = new UserStatistics();
-        List<Response> allResponses = getResponsesOfUser(userName, idApp, startDate, endDate);
+        List<Response> allResponses = getResponsesOfUser(userID, idApp, startDate, endDate);
         userStatistics = userStatistics.calculateStatistics(allResponses);
 
 

@@ -18,7 +18,7 @@ public class Response {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String userName;
+    private String userID;
     private String idApp;
     private String phase;
     private String activity;

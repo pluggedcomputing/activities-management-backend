@@ -12,6 +12,6 @@ public class User {
     private long id;
 
     @Column(nullable = false)
-    private String userName;
+    private String userID;
 
 }
