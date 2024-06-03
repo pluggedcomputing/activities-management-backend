@@ -26,8 +26,6 @@ public class ResponseController {
 
 
 
-
-
     // Endpoint to create a new response
     @PostMapping
     public void createResponse(@RequestBody Response response) {
