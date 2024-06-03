@@ -37,8 +37,20 @@ public class ResponseController {
 
     // Endpoint get all responses
     @GetMapping
-    public List<Response> getAllResponse() {
-        return responseRepository.findAll();
+    public List<Response> getAllResponse(
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+    {
+        List<Response> allResponses = responseRepository.findAll();
+
+        // Checks if startDate and endDate have been provided
+        if (startDate != null && endDate != null) {
+            allResponses = allResponses.stream()
+                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate)) || (q.getDateResponse().after(startDate) &&
+                            q.getDateResponse().before(endDate)))
+                    .collect(Collectors.toList());
+        }
+        return allResponses;
     }
 
 
@@ -53,7 +65,7 @@ public class ResponseController {
 
         // Filter responses by userID and idApp
         List<Response> searchResponse = new ArrayList<>();
-        for (Response q: getAllResponse()){
+        for (Response q: getAllResponse(startDate,endDate)){
             if (q.getPhase().equalsIgnoreCase(phase) && q.getActivity().equalsIgnoreCase(activity)){
                 searchResponse.add(q);
             }
