@@ -83,7 +83,7 @@ public class ResponseController {
         ResponsesStatistics responsesStatistics = new ResponsesStatistics();
         List<Response> responses = getSearchResponse(phase,activity,startDate,endDate);
 
-        responsesStatistics.calculateStatistics(responses);
+        responsesStatistics = responsesStatistics.calculateStatistics(responses);
 
         System.out.println(responsesStatistics);
         return responsesStatistics;
@@ -110,7 +110,7 @@ public class ResponseController {
 
         // Generate statistics of responses
         ResponsesStatistics responsesStatistics = new ResponsesStatistics();
-        responsesStatistics.calculateStatistics(responses);
+        responsesStatistics = responsesStatistics.calculateStatistics(responses);
 
 
         return responsesStatistics;
