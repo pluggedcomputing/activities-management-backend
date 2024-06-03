@@ -38,8 +38,8 @@ public class UserController {
     @PostMapping
     public void createUser(@RequestBody User user) {
         userRepository.save(user);
-        String userName = user.getUserName();
-        System.out.println("User created: " + userName);
+        String userID = user.getUserID();
+        System.out.println("User created: " + userID);
 
     }
 }
