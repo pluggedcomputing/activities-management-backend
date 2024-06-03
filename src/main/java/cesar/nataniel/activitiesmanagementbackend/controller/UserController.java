@@ -61,8 +61,8 @@ public class UserController {
         // Checks if startDate and endDate have been provided
         if (startDate != null && endDate != null) {
             responses = responses.stream()
-                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().after(startDate)) &&
-                            (q.getDateResponse().equals(endDate) || q.getDateResponse().before(endDate)))
+                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate)) || (q.getDateResponse().after(startDate) &&
+                            q.getDateResponse().before(endDate)))
                     .collect(Collectors.toList());
         }
 
