@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class ResponseController {
                             q.getDateResponse().before(endDate)))
                     .collect(Collectors.toList());
         }
-        return allResponses;
+        return sortResponseByData(allResponses);
     }
 
 
@@ -79,7 +80,7 @@ public class ResponseController {
                     .collect(Collectors.toList());
         }
 
-        return searchResponse;
+        return sortResponseByData(searchResponse);
     }
 
 
@@ -148,7 +149,7 @@ public class ResponseController {
                     .collect(Collectors.toList());
         }
 
-        return responses;
+        return sortResponseByData(responses);
     }
 
 
@@ -170,5 +171,14 @@ public class ResponseController {
         return userStatistics;
     }
 
+
+    // Sort the responses by date
+    public List<Response> sortResponseByData(List<Response> responses){
+        responses = responses.stream()
+                .sorted(Comparator.comparing(Response::getDateResponse))
+                .collect(Collectors.toList());
+
+        return responses;
+    }
 
 }
