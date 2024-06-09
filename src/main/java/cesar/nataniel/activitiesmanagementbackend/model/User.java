@@ -1,10 +1,11 @@
 package cesar.nataniel.activitiesmanagementbackend.model;
 import jakarta.persistence.*;
+import jdk.jfr.Name;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "tb-user")
 public class User {
 
     @Id
@@ -12,7 +13,7 @@ public class User {
     private long id;
 
 
-    @Column(nullable = false, name = "email")
+    @Column(nullable = false)
     private String userID;
 
 }
