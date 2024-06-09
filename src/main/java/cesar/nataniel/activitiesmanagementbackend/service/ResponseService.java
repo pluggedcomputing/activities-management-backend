@@ -1,7 +1,161 @@
 package cesar.nataniel.activitiesmanagementbackend.service;
 
+import cesar.nataniel.activitiesmanagementbackend.model.Response;
+import cesar.nataniel.activitiesmanagementbackend.model.ResponsesStatistics;
+import cesar.nataniel.activitiesmanagementbackend.model.UserStatistics;
+import cesar.nataniel.activitiesmanagementbackend.repository.ResponseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ResponseService {
+    ResponseRepository responseRepository;
+
+    @Autowired
+    public ResponseService(ResponseRepository responseRepository){
+        this.responseRepository = responseRepository;
+    }
+
+
+
+    public UserStatistics getStatisticsUser(@RequestParam String userID,
+                                            @RequestParam String idApp,
+                                            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+                                            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+    {
+        UserStatistics userStatistics = new UserStatistics();
+        List<Response> allResponses = getResponsesOfUser(userID, idApp, startDate, endDate);
+        userStatistics = userStatistics.calculateStatistics(allResponses);
+
+
+        System.out.println(userStatistics);
+        return userStatistics;
+    }
+
+    public List<Response> getResponsesOfUser(
+            @RequestParam String userID,
+            @RequestParam String idApp,
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+    {
+        // Filter questions by userID and idApp
+        List<Response> responses = responseRepository.findAll().stream()
+                .filter(q -> q.getUserID().equals(userID) && q.getIdApp().equals(idApp))
+                .collect(Collectors.toList());
+
+        // Checks if startDate and endDate have been provided
+        if (startDate != null && endDate != null) {
+            responses = responses.stream()
+                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate)) || (q.getDateResponse().after(startDate) &&
+                            q.getDateResponse().before(endDate)))
+                    .collect(Collectors.toList());
+        }
+
+        return sortResponseByData(responses);
+    }
+
+    public ResponsesStatistics getStatisticsAllResponse(
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+    {
+        // Get all responses
+        List<Response> responses = responseRepository.findAll();
+
+
+        // Checks if startDate and endDate have been provided
+        if (startDate != null && endDate != null) {
+            responses = responses.stream()
+                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate)) || (q.getDateResponse().after(startDate) &&
+                            q.getDateResponse().before(endDate)))
+                    .collect(Collectors.toList());
+        }
+
+        // Generate statistics of responses
+        ResponsesStatistics responsesStatistics = new ResponsesStatistics();
+        responsesStatistics = responsesStatistics.calculateStatistics(responses);
+
+
+        return responsesStatistics;
+    }
+
+    public ResponsesStatistics getStatisticsResponse(
+            @RequestParam String phase, @RequestParam String activity,
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+    {
+        ResponsesStatistics responsesStatistics = new ResponsesStatistics();
+        List<Response> responses = getSearchResponse(phase,activity,startDate,endDate);
+
+        responsesStatistics = responsesStatistics.calculateStatistics(responses);
+
+        System.out.println(responsesStatistics);
+        return responsesStatistics;
+    }
+
+    public List<Response> getSearchResponse(
+            String phase,
+            String activity,
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+    {
+        // Filter responses by userID and idApp
+        List<Response> searchResponse = new ArrayList<>();
+        for (Response q: getAllResponse(startDate,endDate)){
+            if (q.getPhase().equalsIgnoreCase(phase) && q.getActivity().equalsIgnoreCase(activity)){
+                searchResponse.add(q);
+            }
+        }
+
+        // Checks if startDate and endDate have been provided
+        if (startDate != null && endDate != null) {
+            searchResponse = searchResponse.stream()
+                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate)) || (q.getDateResponse().after(startDate) &&
+                            q.getDateResponse().before(endDate)))
+                    .collect(Collectors.toList());
+        }
+
+        return sortResponseByData(searchResponse);
+    }
+
+    public void createResponse(Response response){
+        Date now = new Date();
+        response.setDateResponse(now);
+        responseRepository.save(response);
+    }
+
+
+    public List<Response> sortResponseByData(List<Response> responses){
+        responses = responses.stream()
+                .sorted(Comparator.comparing(Response::getDateResponse))
+                .collect(Collectors.toList());
+
+        return responses;
+    }
+
+    public List<Response> getAllResponse(
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+    {
+
+        List<Response> allResponses = responseRepository.findAll();
+
+        // Checks if startDate and endDate have been provided
+        if (startDate != null && endDate != null) {
+            allResponses = allResponses.stream()
+                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate)) || (q.getDateResponse().after(startDate) &&
+                            q.getDateResponse().before(endDate)))
+                    .collect(Collectors.toList());
+        }
+
+        return sortResponseByData(allResponses);
+
+    }
 }
