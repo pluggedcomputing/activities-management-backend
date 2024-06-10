@@ -3,19 +3,15 @@ package cesar.nataniel.activitiesmanagementbackend.controller;
 import cesar.nataniel.activitiesmanagementbackend.model.Response;
 import cesar.nataniel.activitiesmanagementbackend.model.ResponsesStatistics;
 import cesar.nataniel.activitiesmanagementbackend.model.UserStatistics;
-import cesar.nataniel.activitiesmanagementbackend.repository.ResponseRepository;
-
 import cesar.nataniel.activitiesmanagementbackend.service.ResponseService;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("/response")
@@ -66,6 +62,7 @@ public class ResponseController {
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
     {
+        System.out.println("Phase: " + phase + " Activity: " + activity);
         return responseService.getStatisticsResponse(phase,activity,startDate,endDate);
     }
 
