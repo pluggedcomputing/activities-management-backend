@@ -62,7 +62,6 @@ public class ResponseController {
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
     {
-        System.out.println("Phase: " + phase + " Activity: " + activity);
         return responseService.getStatisticsResponse(phase,activity,startDate,endDate);
     }
 

@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -19,128 +18,139 @@ public class ResponseService {
     private final ResponseRepository responseRepository;
 
     @Autowired
-    public ResponseService(ResponseRepository responseRepository){
+    public ResponseService(ResponseRepository responseRepository) {
         this.responseRepository = responseRepository;
     }
 
+    /**
+     * Returns and calculates user statistics for the given user ID and app ID within the specified date range.
+     *
+     * @param userID The ID of the user.
+     * @param idApp The ID of the application.
+     * @param startDate The start date of the date range.
+     * @param endDate The end date of the date range.
+     * @return Calculated user statistics.
+     */
     public UserStatistics getStatisticsUser(String userID, String idApp,
                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-        UserStatistics userStatistics = new UserStatistics();
         List<Response> allResponses = getResponsesOfUser(userID, idApp, startDate, endDate);
-        userStatistics = userStatistics.calculateStatistics(allResponses);
-
-        // Logging should be done using a logger
-        System.out.println(userStatistics);
-        return userStatistics;
+        return new UserStatistics().calculateStatistics(allResponses);
     }
 
+    /**
+     * Returns responses of a user within the specified date range.
+     *
+     * @param userID The ID of the user.
+     * @param idApp The ID of the application.
+     * @param startDate The start date of the date range.
+     * @param endDate The end date of the date range.
+     * @return List of responses sorted by date.
+     */
     public List<Response> getResponsesOfUser(String userID, String idApp,
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-        // Filter questions by userID and idApp
-        List<Response> responses = responseRepository.findAll().stream()
-                .filter(q -> q.getUserID().equals(userID) && q.getIdApp().equals(idApp))
-                .collect(Collectors.toList());
-
-        // Checks if startDate and endDate have been provided
+        List<Response> responses;
         if (startDate != null && endDate != null) {
-            responses = responses.stream()
-                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate))
-                            || (q.getDateResponse().after(startDate) && q.getDateResponse().before(endDate)))
-                    .collect(Collectors.toList());
+            responses = responseRepository.findByUserIDAndIdAppAndDateRange(userID, idApp, startDate, endDate);
+        } else {
+            responses = responseRepository.findByUserIDAndIdApp(userID, idApp);
         }
-
         return sortResponseByDate(responses);
     }
 
+    /**
+     * Returns and calculates statistics for all responses within the specified date range.
+     *
+     * @param startDate The start date of the date range.
+     * @param endDate The end date of the date range.
+     * @return Calculated statistics for all responses.
+     */
     public ResponsesStatistics getStatisticsAllResponse(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-        // Get all responses
-        List<Response> responses = responseRepository.findAll();
-
-        // Checks if startDate and endDate have been provided
+        List<Response> responses;
         if (startDate != null && endDate != null) {
-            responses = responses.stream()
-                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate))
-                            || (q.getDateResponse().after(startDate) && q.getDateResponse().before(endDate)))
-                    .collect(Collectors.toList());
+            responses = responseRepository.findAllByDateRange(startDate, endDate);
+        } else {
+            responses = responseRepository.findAll();
         }
-
-        // Generate statistics of responses
-        ResponsesStatistics responsesStatistics = new ResponsesStatistics();
-        responsesStatistics = responsesStatistics.calculateStatistics(responses);
-
-        return responsesStatistics;
+        return new ResponsesStatistics().calculateStatistics(responses);
     }
 
+    /**
+     * Returns and calculates statistics for responses based on phase and activity within the specified date range.
+     *
+     * @param phase The phase of the activity.
+     * @param activity The activity.
+     * @param startDate The start date of the date range.
+     * @param endDate The end date of the date range.
+     * @return Calculated statistics for the specified phase and activity.
+     */
     public ResponsesStatistics getStatisticsResponse(String phase, String activity,
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-        ResponsesStatistics responsesStatistics = new ResponsesStatistics();
         List<Response> responses = getSearchResponse(phase, activity, startDate, endDate);
-
-        responsesStatistics = responsesStatistics.calculateStatistics(responses);
-
-        // Logging should be done using a logger
-        System.out.println(responsesStatistics);
-        return responsesStatistics;
+        return new ResponsesStatistics().calculateStatistics(responses);
     }
 
+    /**
+     * Returns responses based on phase and activity within the specified date range.
+     *
+     * @param phase The phase of the activity.
+     * @param activity The activity.
+     * @param startDate The start date of the date range.
+     * @param endDate The end date of the date range.
+     * @return List of responses sorted by date.
+     */
     public List<Response> getSearchResponse(String phase, String activity,
                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-        // Logging should be done using a logger
-        System.out.println("phase: " + phase + " activity: " + activity);
-
-        // Filter responses by phase and activity
-        List<Response> searchResponse = new ArrayList<>();
-        for (Response q: getAllResponse(startDate, endDate)) {
-            if (q.getPhase().equalsIgnoreCase(phase) && q.getActivity().equalsIgnoreCase(activity)) {
-                searchResponse.add(q);
-            }
-        }
-
-        // Checks if startDate and endDate have been provided
+        List<Response> searchResponse;
         if (startDate != null && endDate != null) {
-            searchResponse = searchResponse.stream()
-                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate))
-                            || (q.getDateResponse().after(startDate) && q.getDateResponse().before(endDate)))
-                    .collect(Collectors.toList());
+            searchResponse = responseRepository.findByPhaseAndActivityAndDateRange(phase, activity, startDate, endDate);
+        } else {
+            searchResponse = responseRepository.findByPhaseAndActivity(phase, activity);
         }
-
-        // Logging should be done using a logger
-        System.out.println(searchResponse);
         return sortResponseByDate(searchResponse);
     }
 
+    /**
+     * Creates a new response with the current date and saves it to the repository.
+     *
+     * @param response The response to be created.
+     */
     public void createResponse(Response response) {
-        Date now = new Date();
-        response.setDateResponse(now);
-
-        // Logging should be done using a logger
-        System.out.println(response);
+        response.setDateResponse(new Date());
         responseRepository.save(response);
     }
 
+    /**
+     * Sorts a list of responses by date.
+     *
+     * @param responses The list of responses to be sorted.
+     * @return The sorted list of responses.
+     */
     public List<Response> sortResponseByDate(List<Response> responses) {
         return responses.stream()
                 .sorted(Comparator.comparing(Response::getDateResponse))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns all responses within the specified date range.
+     *
+     * @param startDate The start date of the date range.
+     * @param endDate The end date of the date range.
+     * @return List of all responses sorted by date.
+     */
     public List<Response> getAllResponse(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-        List<Response> allResponses = responseRepository.findAll();
-
-        // Checks if startDate and endDate have been provided
+        List<Response> allResponses;
         if (startDate != null && endDate != null) {
-            allResponses = allResponses.stream()
-                    .filter(q -> (q.getDateResponse().equals(startDate) || q.getDateResponse().equals(endDate))
-                            || (q.getDateResponse().after(startDate) && q.getDateResponse().before(endDate)))
-                    .collect(Collectors.toList());
+            allResponses = responseRepository.findAllByDateRange(startDate, endDate);
+        } else {
+            allResponses = responseRepository.findAll();
         }
-
         return sortResponseByDate(allResponses);
     }
 }
