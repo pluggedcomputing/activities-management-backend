@@ -25,4 +25,8 @@ public class UserService {
     public List<User> getAll(){
         return userRepository.findAll();
     }
+
+    public List<String> getAllUserId() {
+        return userRepository.findDistinctUserIDUsingQuery();
+    }
 }

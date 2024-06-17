@@ -36,4 +36,10 @@ public class UserController {
     public void createUser(@RequestBody User user) {
         userService.createUser(user);
     }
+
+
+    @GetMapping("/getAllUserId")
+    public List<String> getAllUserId(){
+       return userService.getAllUserId();
+    }
 }
