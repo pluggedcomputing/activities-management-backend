@@ -38,7 +38,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/getAllUserId")
+    @GetMapping("/getUsers")
     public List<String> getAllUserId(){
        return userService.getAllUserId();
     }
