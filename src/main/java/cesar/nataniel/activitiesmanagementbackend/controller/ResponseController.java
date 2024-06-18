@@ -35,44 +35,48 @@ public class ResponseController {
     // Endpoint get all responses
     @GetMapping
     public List<Response> getAllResponse(
+            @RequestParam String idApp,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
     {
-       return responseService.getAllResponse(startDate,endDate);
+       return responseService.getAllResponse(idApp,startDate,endDate);
     }
 
 
     // Endpoint to search responses with phase and activity
     @GetMapping("/getSearchResponse")
     public List<Response> getSearchResponse(
-            String phase,
-            String activity,
+            @RequestParam String idApp,
+            @RequestParam String phase,
+            @RequestParam String activity,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
     {
-        return responseService.getSearchResponse(phase,activity,startDate ,endDate);
+        return responseService.getSearchResponse(idApp,phase,activity,startDate ,endDate);
     }
 
 
     // Endpoint get statistics for a unique question
     @GetMapping("/getStatisticsResponse")
     public ResponsesStatistics getStatisticsResponse(
+            @RequestParam String idApp,
             @RequestParam String phase,
             @RequestParam String activity,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
     {
-        return responseService.getStatisticsResponse(phase,activity,startDate,endDate);
+        return responseService.getStatisticsResponse(idApp,phase,activity,startDate,endDate);
     }
 
 
     // Endpoint get statistics for all response
     @GetMapping("/getStatisticsAllResponse")
     public ResponsesStatistics getStatisticsAllResponse(
+            @RequestParam String idApp,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
             @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
     {
-        return responseService.getStatisticsAllResponse(startDate,endDate);
+        return responseService.getStatisticsAllResponse(idApp,startDate,endDate);
     }
 
 

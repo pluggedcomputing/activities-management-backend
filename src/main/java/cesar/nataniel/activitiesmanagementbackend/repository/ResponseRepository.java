@@ -17,11 +17,13 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
     @Query("SELECT r FROM Response r WHERE r.userID = :userID AND r.idApp = :idApp AND r.dateResponse BETWEEN :startDate AND :endDate")
     List<Response> findByUserIDAndIdAppAndDateRange(@Param("userID") String userID, @Param("idApp") String idApp, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-    @Query("SELECT r FROM Response r WHERE r.dateResponse BETWEEN :startDate AND :endDate")
-    List<Response> findAllByDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT r FROM Response r WHERE r.idApp = :idApp AND r.dateResponse BETWEEN :startDate AND :endDate")
+    List<Response> findAllByDateRange(@Param("idApp") String idApp, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-    @Query("SELECT r FROM Response r WHERE r.phase = :phase AND r.activity = :activity AND r.dateResponse BETWEEN :startDate AND :endDate")
-    List<Response> findByPhaseAndActivityAndDateRange(@Param("phase") String phase, @Param("activity") String activity, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
+    @Query("SELECT r FROM Response r WHERE r.idApp = :idApp AND r.phase = :phase AND r.activity = :activity AND r.dateResponse BETWEEN :startDate AND :endDate")
+    List<Response> findByIdAppAndPhaseAndActivityAndDateRange(@Param("idApp") String idApp, @Param("phase") String phase, @Param("activity") String activity, @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
-    List<Response> findByPhaseAndActivity(String phase, String activity);
+    List<Response> findByIdAppAndPhaseAndActivity(String idApp,String phase, String activity);
+
+    List<Response> findAllByIdApp(String idApp);
 }

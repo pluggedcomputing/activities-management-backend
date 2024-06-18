@@ -31,9 +31,11 @@ public class ResponseService {
      * @param endDate The end date of the date range.
      * @return Calculated user statistics.
      */
-    public UserStatistics getStatisticsUser(String userID, String idApp,
-                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+    public UserStatistics getStatisticsUser(
+            String userID, String idApp,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+
         List<Response> allResponses = getResponsesOfUser(userID, idApp, startDate, endDate);
         return new UserStatistics().calculateStatistics(allResponses);
     }
@@ -47,9 +49,11 @@ public class ResponseService {
      * @param endDate The end date of the date range.
      * @return List of responses sorted by date.
      */
-    public List<Response> getResponsesOfUser(String userID, String idApp,
-                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+    public List<Response> getResponsesOfUser(
+            String userID, String idApp,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+
         List<Response> responses;
         if (startDate != null && endDate != null) {
             responses = responseRepository.findByUserIDAndIdAppAndDateRange(userID, idApp, startDate, endDate);
@@ -62,17 +66,21 @@ public class ResponseService {
     /**
      * Returns and calculates statistics for all responses within the specified date range.
      *
+     * @param idApp The ID of the application.
      * @param startDate The start date of the date range.
      * @param endDate The end date of the date range.
      * @return Calculated statistics for all responses.
      */
-    public ResponsesStatistics getStatisticsAllResponse(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+    public ResponsesStatistics getStatisticsAllResponse(
+            String idApp,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+
         List<Response> responses;
         if (startDate != null && endDate != null) {
-            responses = responseRepository.findAllByDateRange(startDate, endDate);
+            responses = responseRepository.findAllByDateRange(idApp, startDate, endDate);
         } else {
-            responses = responseRepository.findAll();
+            responses = responseRepository.findAllByIdApp(idApp);
         }
         return new ResponsesStatistics().calculateStatistics(responses);
     }
@@ -80,36 +88,41 @@ public class ResponseService {
     /**
      * Returns and calculates statistics for responses based on phase and activity within the specified date range.
      *
+     * @param idApp The ID of the application.
      * @param phase The phase of the activity.
      * @param activity The activity.
      * @param startDate The start date of the date range.
      * @param endDate The end date of the date range.
      * @return Calculated statistics for the specified phase and activity.
      */
-    public ResponsesStatistics getStatisticsResponse(String phase, String activity,
-                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
-        List<Response> responses = getSearchResponse(phase, activity, startDate, endDate);
+    public ResponsesStatistics getStatisticsResponse(
+            String idApp, String phase, String activity,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+
+        List<Response> responses = getSearchResponse(idApp, phase, activity, startDate, endDate);
         return new ResponsesStatistics().calculateStatistics(responses);
     }
 
     /**
      * Returns responses based on phase and activity within the specified date range.
      *
+     * @param idApp The ID of the application.
      * @param phase The phase of the activity.
      * @param activity The activity.
      * @param startDate The start date of the date range.
      * @param endDate The end date of the date range.
      * @return List of responses sorted by date.
      */
-    public List<Response> getSearchResponse(String phase, String activity,
-                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+    public List<Response> getSearchResponse(
+            String idApp, String phase, String activity,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
         List<Response> searchResponse;
         if (startDate != null && endDate != null) {
-            searchResponse = responseRepository.findByPhaseAndActivityAndDateRange(phase, activity, startDate, endDate);
+            searchResponse = responseRepository.findByIdAppAndPhaseAndActivityAndDateRange(idApp, phase, activity, startDate, endDate);
         } else {
-            searchResponse = responseRepository.findByPhaseAndActivity(phase, activity);
+            searchResponse = responseRepository.findByIdAppAndPhaseAndActivity(idApp, phase, activity);
         }
         return sortResponseByDate(searchResponse);
     }
@@ -139,17 +152,22 @@ public class ResponseService {
     /**
      * Returns all responses within the specified date range.
      *
+     * @param idApp The ID of the application.
      * @param startDate The start date of the date range.
      * @param endDate The end date of the date range.
      * @return List of all responses sorted by date.
      */
-    public List<Response> getAllResponse(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-                                         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+    public List<Response> getAllResponse(
+            String idApp,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+
         List<Response> allResponses;
+
         if (startDate != null && endDate != null) {
-            allResponses = responseRepository.findAllByDateRange(startDate, endDate);
+            allResponses = responseRepository.findAllByDateRange(idApp,startDate, endDate);
         } else {
-            allResponses = responseRepository.findAll();
+            allResponses = responseRepository.findAllByIdApp(idApp);
         }
         return sortResponseByDate(allResponses);
     }
