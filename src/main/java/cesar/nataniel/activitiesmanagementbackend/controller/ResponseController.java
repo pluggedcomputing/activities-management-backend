@@ -103,4 +103,10 @@ public class ResponseController {
         return responseService.getStatisticsUser(userID,idApp,startDate,endDate);
     }
 
+
+    // Endpoint to get all registered applications
+    @GetMapping("getApplications")
+    public List<String> getApplications(){
+        return responseService.getApplications();
+    }
 }

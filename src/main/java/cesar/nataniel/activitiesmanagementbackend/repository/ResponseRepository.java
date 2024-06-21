@@ -26,4 +26,7 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
     List<Response> findByIdAppAndPhaseAndActivity(String idApp,String phase, String activity);
 
     List<Response> findAllByIdApp(String idApp);
+
+    @Query("SELECT DISTINCT idApp FROM Response ORDER BY idApp")
+    List<String> findDistinctIdApp();
 }

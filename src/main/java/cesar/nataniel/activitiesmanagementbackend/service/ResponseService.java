@@ -171,4 +171,9 @@ public class ResponseService {
         }
         return sortResponseByDate(allResponses);
     }
+
+
+    public List<String> getApplications() {
+        return responseRepository.findDistinctIdApp();
+    }
 }
