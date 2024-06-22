@@ -29,4 +29,7 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
 
     @Query("SELECT DISTINCT idApp FROM Response ORDER BY idApp")
     List<String> findDistinctIdApp();
+
+    @Query("SELECT DISTINCT r.userID FROM Response r WHERE r.idApp = :idApp ORDER BY r.userID")
+    List<String> findDistinctUserIDByIdApp(@Param("idApp") String idApp);
 }

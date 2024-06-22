@@ -11,6 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     @Query("SELECT DISTINCT userID FROM User ORDER BY userID")
-    List<String> findDistinctUserIDUsingQuery();
+    List<String> findDistinctUserID();
 
 }

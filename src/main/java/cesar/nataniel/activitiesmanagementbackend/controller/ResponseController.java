@@ -109,4 +109,10 @@ public class ResponseController {
     public List<String> getApplications(){
         return responseService.getApplications();
     }
+
+    // Endpoint to get all registered users by idApp
+    @GetMapping("getUsers")
+    public List<String> getUsers(@RequestParam String idApp){
+        return responseService.getUsers(idApp);
+    }
 }

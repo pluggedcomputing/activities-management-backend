@@ -176,4 +176,8 @@ public class ResponseService {
     public List<String> getApplications() {
         return responseRepository.findDistinctIdApp();
     }
+
+    public List<String> getUsers(String idApp) {
+        return responseRepository.findDistinctUserIDByIdApp(idApp);
+    }
 }

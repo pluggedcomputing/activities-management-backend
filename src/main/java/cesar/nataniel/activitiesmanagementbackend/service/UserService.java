@@ -26,7 +26,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public List<String> getAllUserId() {
-        return userRepository.findDistinctUserIDUsingQuery();
+    public List<String> getUsers() {
+        return userRepository.findDistinctUserID();
     }
 }
