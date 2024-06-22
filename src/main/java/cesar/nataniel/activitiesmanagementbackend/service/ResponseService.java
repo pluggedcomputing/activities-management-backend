@@ -180,4 +180,12 @@ public class ResponseService {
     public List<String> getUsers(String idApp) {
         return responseRepository.findDistinctUserIDByIdApp(idApp);
     }
+
+    public List<String> getActivity(String idApp) {
+        return responseRepository.findDistinctActivityByIdApp(idApp);
+    }
+
+    public List<String> getPhases(String idApp) {
+        return responseRepository.findDistinctPhasesByIdApp(idApp);
+    }
 }
