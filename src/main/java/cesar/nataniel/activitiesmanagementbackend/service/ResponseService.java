@@ -181,8 +181,8 @@ public class ResponseService {
         return responseRepository.findDistinctUserIDByIdApp(idApp);
     }
 
-    public List<String> getActivity(String idApp) {
-        return responseRepository.findDistinctActivityByIdApp(idApp);
+    public List<String> getActivity(String idApp, String phase) {
+        return responseRepository.findDistinctActivityByIdAppAndPhase(idApp, phase);
     }
 
     public List<String> getPhases(String idApp) {

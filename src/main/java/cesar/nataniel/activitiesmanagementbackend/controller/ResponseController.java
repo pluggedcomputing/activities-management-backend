@@ -118,8 +118,8 @@ public class ResponseController {
 
     // Endpoint to get all registered activities by idApp
     @GetMapping("getActivity")
-    public List<String> getActivity(@RequestParam String idApp){
-        return responseService.getActivity(idApp);
+    public List<String> getActivity(@RequestParam String idApp, @RequestParam String phase){
+        return responseService.getActivity(idApp, phase);
     }
 
     // Endpoint to get all registered phases by idApp
