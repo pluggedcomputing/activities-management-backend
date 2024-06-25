@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -33,8 +35,8 @@ public class ResponseService {
      */
     public UserStatistics getStatisticsUser(
             String userID, String idApp,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate) {
 
         List<Response> allResponses = getResponsesOfUser(userID, idApp, startDate, endDate);
         return new UserStatistics().calculateStatistics(allResponses);
@@ -51,8 +53,8 @@ public class ResponseService {
      */
     public List<Response> getResponsesOfUser(
             String userID, String idApp,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate) {
 
         List<Response> responses;
         if (startDate != null && endDate != null) {
@@ -73,8 +75,8 @@ public class ResponseService {
      */
     public ResponsesStatistics getStatisticsAllResponse(
             String idApp,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate) {
 
         List<Response> responses;
         if (startDate != null && endDate != null) {
@@ -97,8 +99,8 @@ public class ResponseService {
      */
     public ResponsesStatistics getStatisticsResponse(
             String idApp, String phase, String activity,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate) {
 
         List<Response> responses = getSearchResponse(idApp, phase, activity, startDate, endDate);
         return new ResponsesStatistics().calculateStatistics(responses);
@@ -116,8 +118,8 @@ public class ResponseService {
      */
     public List<Response> getSearchResponse(
             String idApp, String phase, String activity,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate) {
         List<Response> searchResponse;
         if (startDate != null && endDate != null) {
             searchResponse = responseRepository.findByIdAppAndPhaseAndActivityAndDateRange(idApp, phase, activity, startDate, endDate);
@@ -133,7 +135,7 @@ public class ResponseService {
      * @param response The response to be created.
      */
     public void createResponse(Response response) {
-        response.setDateResponse(new Date());
+        response.setDateResponse(LocalDate.now());
         responseRepository.save(response);
     }
 
@@ -159,8 +161,8 @@ public class ResponseService {
      */
     public List<Response> getAllResponse(
             String idApp,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         List<Response> allResponses;
 

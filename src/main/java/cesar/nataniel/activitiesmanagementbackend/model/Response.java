@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -25,7 +27,7 @@ public class Response {
     private String userResponse;
     private String expectedResponse;
     private Boolean isCorrect;
-    private Date dateResponse;
+    private LocalDate dateResponse;
     private String typeOfQuestion;
 
 

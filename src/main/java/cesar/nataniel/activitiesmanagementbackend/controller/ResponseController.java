@@ -4,12 +4,14 @@ import cesar.nataniel.activitiesmanagementbackend.model.Response;
 import cesar.nataniel.activitiesmanagementbackend.model.ResponsesStatistics;
 import cesar.nataniel.activitiesmanagementbackend.model.UserStatistics;
 import cesar.nataniel.activitiesmanagementbackend.service.ResponseService;
-import org.antlr.v4.runtime.misc.NotNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
-import java.util.Date;
+
+import java.time.LocalDate;
+
 import java.util.List;
 
 
@@ -36,8 +38,8 @@ public class ResponseController {
     @GetMapping
     public List<Response> getAllResponse(
             @RequestParam String idApp,
-            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
     {
        return responseService.getAllResponse(idApp,startDate,endDate);
     }
@@ -49,8 +51,8 @@ public class ResponseController {
             @RequestParam String idApp,
             @RequestParam String phase,
             @RequestParam String activity,
-            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate)
     {
         return responseService.getSearchResponse(idApp,phase,activity,startDate ,endDate);
     }
@@ -62,8 +64,8 @@ public class ResponseController {
             @RequestParam String idApp,
             @RequestParam String phase,
             @RequestParam String activity,
-            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate)
     {
         return responseService.getStatisticsResponse(idApp,phase,activity,startDate,endDate);
     }
@@ -73,8 +75,8 @@ public class ResponseController {
     @GetMapping("/getStatisticsAllResponse")
     public ResponsesStatistics getStatisticsAllResponse(
             @RequestParam String idApp,
-            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate)
     {
         return responseService.getStatisticsAllResponse(idApp,startDate,endDate);
     }
@@ -85,8 +87,8 @@ public class ResponseController {
     public List<Response> getResponsesOfUser(
             @RequestParam String userID,
             @RequestParam String idApp,
-            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate)
     {
         return responseService.getResponsesOfUser(userID,idApp,startDate,endDate);
     }
@@ -97,8 +99,8 @@ public class ResponseController {
     public UserStatistics getStatisticsUser(
             @RequestParam String userID,
             @RequestParam String idApp,
-            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate)
+            @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  startDate,
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate)
     {
         return responseService.getStatisticsUser(userID,idApp,startDate,endDate);
     }
