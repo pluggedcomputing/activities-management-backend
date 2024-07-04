@@ -5,13 +5,13 @@ import cesar.nataniel.activitiesmanagementbackend.model.ResponsesStatistics;
 import cesar.nataniel.activitiesmanagementbackend.model.UserStatistics;
 import cesar.nataniel.activitiesmanagementbackend.repository.ResponseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,6 +79,7 @@ public class ResponseService {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate  endDate) {
 
         List<Response> responses;
+
         if (startDate != null && endDate != null) {
             responses = responseRepository.findAllByDateRange(idApp, startDate, endDate);
         } else {
@@ -159,19 +160,20 @@ public class ResponseService {
      * @param endDate The end date of the date range.
      * @return List of all responses sorted by date.
      */
-    public List<Response> getAllResponse(
+    public Page<Response> getAllResponse(
             String idApp,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Pageable pageable) {
 
-        List<Response> allResponses;
+        Page<Response> allResponses;
 
         if (startDate != null && endDate != null) {
-            allResponses = responseRepository.findAllByDateRange(idApp,startDate, endDate);
+            allResponses = responseRepository.findAllByDateRange(idApp,startDate, endDate, pageable);
         } else {
-            allResponses = responseRepository.findAllByIdApp(idApp);
+            allResponses = responseRepository.findAllByIdApp(idApp, pageable);
         }
-        return sortResponseByDate(allResponses);
+        return allResponses;
     }
 
 

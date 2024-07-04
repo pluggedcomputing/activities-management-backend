@@ -1,6 +1,8 @@
 package cesar.nataniel.activitiesmanagementbackend.repository;
 
 import cesar.nataniel.activitiesmanagementbackend.model.Response;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,15 +21,17 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
     List<Response> findByUserIDAndIdAppAndDateRange(@Param("userID") String userID, @Param("idApp") String idApp, @Param("startDate") LocalDate  startDate, @Param("endDate") LocalDate  endDate);
 
     @Query("SELECT r FROM Response r WHERE r.idApp = :idApp AND r.dateResponse BETWEEN :startDate AND :endDate")
-    List<Response> findAllByDateRange(@Param("idApp") String idApp, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    Page<Response> findAllByDateRange(@Param("idApp") String idApp, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, Pageable pageable);
 
+    @Query("SELECT r FROM Response r WHERE r.idApp = :idApp AND r.dateResponse BETWEEN :startDate AND :endDate")
+    List<Response> findAllByDateRange(@Param("idApp") String idApp, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     @Query("SELECT r FROM Response r WHERE r.idApp = :idApp AND r.phase = :phase AND r.activity = :activity AND r.dateResponse BETWEEN :startDate AND :endDate")
     List<Response> findByIdAppAndPhaseAndActivityAndDateRange(@Param("idApp") String idApp, @Param("phase") String phase, @Param("activity") String activity, @Param("startDate") LocalDate  startDate, @Param("endDate") LocalDate  endDate);
 
     List<Response> findByIdAppAndPhaseAndActivity(String idApp,String phase, String activity);
 
+    Page<Response> findAllByIdApp(String idApp, Pageable pageable);
     List<Response> findAllByIdApp(String idApp);
-
     @Query("SELECT DISTINCT idApp FROM Response ORDER BY idApp")
     List<String> findDistinctIdApp();
 

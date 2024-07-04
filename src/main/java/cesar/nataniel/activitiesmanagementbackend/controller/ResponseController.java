@@ -6,6 +6,8 @@ import cesar.nataniel.activitiesmanagementbackend.model.UserStatistics;
 import cesar.nataniel.activitiesmanagementbackend.service.ResponseService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import org.springframework.web.bind.annotation.*;
@@ -36,12 +38,13 @@ public class ResponseController {
 
     // Endpoint get all responses
     @GetMapping
-    public List<Response> getAllResponse(
+    public Page<Response> getAllResponse(
             @RequestParam String idApp,
             @RequestParam(name = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
+            @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Pageable pageable)
     {
-       return responseService.getAllResponse(idApp,startDate,endDate);
+       return responseService.getAllResponse(idApp,startDate,endDate, pageable);
     }
 
 
@@ -107,25 +110,25 @@ public class ResponseController {
 
 
     // Endpoint to get all registered applications
-    @GetMapping("getApplications")
+    @GetMapping("/getApplications")
     public List<String> getApplications(){
         return responseService.getApplications();
     }
 
     // Endpoint to get all registered users by idApp
-    @GetMapping("getUsers")
+    @GetMapping("/getUsers")
     public List<String> getUsers(@RequestParam String idApp){
         return responseService.getUsers(idApp);
     }
 
     // Endpoint to get all registered activities by idApp
-    @GetMapping("getActivity")
+    @GetMapping("/getActivity")
     public List<String> getActivity(@RequestParam String idApp, @RequestParam String phase){
         return responseService.getActivity(idApp, phase);
     }
 
     // Endpoint to get all registered phases by idApp
-    @GetMapping("getPhases")
+    @GetMapping("/getPhases")
     public List<String> getPhases(@RequestParam String idApp){
         return responseService.getPhases(idApp);
     }
