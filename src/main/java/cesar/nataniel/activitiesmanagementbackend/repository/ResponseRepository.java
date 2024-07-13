@@ -20,7 +20,7 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
     @Query("SELECT r FROM Response r WHERE r.userID = :userID AND r.idApp = :idApp AND r.dateResponse BETWEEN :startDate AND :endDate")
     List<Response> findByUserIDAndIdAppAndDateRange(@Param("userID") String userID, @Param("idApp") String idApp, @Param("startDate") LocalDate  startDate, @Param("endDate") LocalDate  endDate);
 
-    @Query("SELECT r FROM Response r WHERE r.idApp = :idApp AND r.dateResponse BETWEEN :startDate AND :endDate")
+    @Query("SELECT r FROM Response r WHERE r.idApp = :idApp AND r.dateResponse BETWEEN :startDate AND :endDate ORDER BY r.dateResponse DESC")
     Page<Response> findAllByDateRange(@Param("idApp") String idApp, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, Pageable pageable);
 
     @Query("SELECT r FROM Response r WHERE r.idApp = :idApp AND r.dateResponse BETWEEN :startDate AND :endDate")
@@ -30,6 +30,7 @@ public interface ResponseRepository extends JpaRepository<Response, Long> {
 
     List<Response> findByIdAppAndPhaseAndActivity(String idApp,String phase, String activity);
 
+    @Query("SELECT r FROM Response r WHERE r.idApp = :idApp ORDER BY r.dateResponse DESC")
     Page<Response> findAllByIdApp(String idApp, Pageable pageable);
     List<Response> findAllByIdApp(String idApp);
     @Query("SELECT DISTINCT idApp FROM Response ORDER BY idApp")
